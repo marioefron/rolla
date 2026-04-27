@@ -345,23 +345,33 @@ body{
   max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .th-inst-note{display:none;}
-.th-sm-row{display:flex;gap:4px;margin-top:3px;align-items:center;justify-content:center;}
-.th-snd-btn{
+.th-sm-row{
+  display:flex;margin-top:3px;align-items:center;
+  justify-content:space-between;
+  width:100%;padding:0 8px;
+}
+.th-snd-btn,
+.th-pwr-btn{
   width:24px;height:20px;
   border:1.5px solid var(--ink);
-  background:var(--ink);color:var(--bg);
   display:flex;align-items:center;justify-content:center;
   cursor:pointer;
   -webkit-appearance:none;appearance:none;padding:0;
 }
-.th-snd-btn.off{
-  background:var(--bg);color:var(--ink);border-color:var(--ink);
-}
+/* Estado ON (negro sólido, ícono crema) */
+.th-snd-btn,
+.th-pwr-btn{background:var(--ink);color:var(--bg);}
+/* Estado OFF (fondo crema, ícono negro) */
+.th-snd-btn.off,
+.th-pwr-btn.off{background:var(--bg);color:var(--ink);}
+/* Speaker: ondas + slash según estado */
 .th-snd-btn.off .spk-wave1,
 .th-snd-btn.off .spk-wave2{display:none;}
 .th-snd-btn.off .spk-slash{display:inline;}
 .th-snd-btn .spk-slash{display:none;}
 .th-snd-btn .spk-icon{width:13px;height:13px;stroke-width:1.7;}
+/* Power: ícono fijo (no cambia paths, solo cambia colores) */
+.th-pwr-btn .pwr-icon{width:13px;height:13px;stroke-width:1.7;}
 
 /* ── ROLL ── */
 .roll-wrapper{flex:1;position:relative;overflow:hidden;background:var(--bg);}
@@ -409,7 +419,7 @@ body{
   display:flex;align-items:center;justify-content:center;
 }
 .ind-pointer{
-  width:10px;height:10px;border-radius:50%;
+  width:17px;height:17px;border-radius:50%;
   background:var(--ink);
 }
 /* Contenedor de pads: mismo ancho que las pistas, 4 columnas iguales */
@@ -702,6 +712,7 @@ body{
       <span class="th-inst-name" id="tn0" onclick="cycleInst(0)">Bombo</span>
       <div class="th-sm-row">
         <button class="th-snd-btn" id="tm0" onclick="tglSnd(0)" aria-label="Silenciar pista 1"><svg class="spk-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h2l3-3v11l-3-3H3z"/><path class="spk-wave1" d="M10 5.5a3 3 0 0 1 0 5"/><path class="spk-wave2" d="M11.5 3.5a5.5 5.5 0 0 1 0 9"/><path class="spk-slash" d="M10 5 14 13"/></svg></button>
+        <button class="th-pwr-btn" id="tp0" onclick="tglLdr(0)" aria-label="Activar/desactivar LDR pista 1"><svg class="pwr-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5v4.5"/><path d="M4.5 5.2a4.6 4.6 0 1 0 7 0"/></svg></button>
       </div>
     </div>
     <div class="th-track" id="th1">
@@ -709,6 +720,7 @@ body{
       <span class="th-inst-name" id="tn1" onclick="cycleInst(1)">Caja</span>
       <div class="th-sm-row">
         <button class="th-snd-btn" id="tm1" onclick="tglSnd(1)" aria-label="Silenciar pista 2"><svg class="spk-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h2l3-3v11l-3-3H3z"/><path class="spk-wave1" d="M10 5.5a3 3 0 0 1 0 5"/><path class="spk-wave2" d="M11.5 3.5a5.5 5.5 0 0 1 0 9"/><path class="spk-slash" d="M10 5 14 13"/></svg></button>
+        <button class="th-pwr-btn" id="tp1" onclick="tglLdr(1)" aria-label="Activar/desactivar LDR pista 2"><svg class="pwr-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5v4.5"/><path d="M4.5 5.2a4.6 4.6 0 1 0 7 0"/></svg></button>
       </div>
     </div>
     <div class="th-track" id="th2">
@@ -716,6 +728,7 @@ body{
       <span class="th-inst-name" id="tn2" onclick="cycleInst(2)">Hihat</span>
       <div class="th-sm-row">
         <button class="th-snd-btn" id="tm2" onclick="tglSnd(2)" aria-label="Silenciar pista 3"><svg class="spk-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h2l3-3v11l-3-3H3z"/><path class="spk-wave1" d="M10 5.5a3 3 0 0 1 0 5"/><path class="spk-wave2" d="M11.5 3.5a5.5 5.5 0 0 1 0 9"/><path class="spk-slash" d="M10 5 14 13"/></svg></button>
+        <button class="th-pwr-btn" id="tp2" onclick="tglLdr(2)" aria-label="Activar/desactivar LDR pista 3"><svg class="pwr-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5v4.5"/><path d="M4.5 5.2a4.6 4.6 0 1 0 7 0"/></svg></button>
       </div>
     </div>
     <div class="th-track" id="th3">
@@ -723,6 +736,7 @@ body{
       <span class="th-inst-name" id="tn3" onclick="cycleInst(3)">Tom</span>
       <div class="th-sm-row">
         <button class="th-snd-btn" id="tm3" onclick="tglSnd(3)" aria-label="Silenciar pista 4"><svg class="spk-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h2l3-3v11l-3-3H3z"/><path class="spk-wave1" d="M10 5.5a3 3 0 0 1 0 5"/><path class="spk-wave2" d="M11.5 3.5a5.5 5.5 0 0 1 0 9"/><path class="spk-slash" d="M10 5 14 13"/></svg></button>
+        <button class="th-pwr-btn" id="tp3" onclick="tglLdr(3)" aria-label="Activar/desactivar LDR pista 4"><svg class="pwr-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5v4.5"/><path d="M4.5 5.2a4.6 4.6 0 1 0 7 0"/></svg></button>
       </div>
     </div>
   </div>
@@ -766,7 +780,8 @@ let bpm=80, playing=false, looping=true, editMode=false;
 let playhead=0, lastTs=null, raf=null;
 let notes=[[],[],[],[]];
 let active=[false,false,false,false];
-let sndOn=[true,true,true,true];
+let sndOn=[true,true,true,true];   // audio en la app por pista
+let ldrOn=[true,true,true,true];   // activación del rectángulo LDR (dispositivo físico)
 let masterMute=false;
 let wW=0,wH=0,rY=0,ppb=0,tW=0;
 let scrollBeat=0;
@@ -775,7 +790,7 @@ let triggered=[new Set(),new Set(),new Set(),new Set()];
 
 function shouldSound(t){
   if(masterMute) return false;
-  return true;
+  return sndOn[t];
 }
 
 // ── DOM ──────────────────────────────────────────────────────────
@@ -956,8 +971,8 @@ function checkTriggers(){
         if(!triggered[t].has(k)){ triggered[t].add(k); trigSnd(t); }
       }
     }
-    // sndOn[t]=false => pad NO se ilumina (LDR no detecta), pero audio sigue
-    const padOn = any && sndOn[t];
+    // ldrOn[t]=false => pad NO se ilumina (LDR deshabilitado), pero el audio sí suena
+    const padOn = any && ldrOn[t];
     if(padOn!==active[t]){ active[t]=padOn; inds[t].classList.toggle('lit',padOn); }
   }
 }
@@ -1290,7 +1305,7 @@ function calSetModalInds(mode){
 
 function playCalBeep(freq=880, dur=0.12, vol=0.4){
   if(!ac) return;
-  if(ac.state==='suspended') ac.resume();
+  if(ac.state !== 'running') ac.resume().catch(()=>{});
   const o=ac.createOscillator(), g=ac.createGain();
   o.type='square';
   o.frequency.value=freq;
@@ -1347,9 +1362,8 @@ function startCalibration(){
 let ac   = null;
 let bufs = null;
 
-function initAudio(){
-  if(ac) return;
-  ac = new (window.AudioContext || window.webkitAudioContext)();
+function buildAudioGraph(){
+  // Cadena maestra: master gain → compresor → destination
   const comp = ac.createDynamicsCompressor();
   comp.threshold.value = -18; comp.knee.value = 6; comp.ratio.value = 4;
   comp.attack.value = 0.003; comp.release.value = 0.15;
@@ -1358,26 +1372,64 @@ function initAudio(){
   master.connect(comp); comp.connect(ac.destination);
   ac._master = master;
   bufs = buildBuffers(ac);
+  // Keepalive silencioso para que el contexto no entre en idle
   const g = ac.createGain(); g.gain.value = 0.001; g.connect(ac._master);
   const osc = ac.createOscillator(); osc.frequency.value = 1; osc.connect(g); osc.start();
-  ['touchstart','mousedown','pointerdown'].forEach(ev=>
-    document.removeEventListener(ev, initAudio)
-  );
 }
 
-// Reanudar audio cuando la pestaña vuelve a estar visible (mobile fix)
+function initAudio(){
+  // Si ya existe y está vivo, no hacer nada
+  if(ac && ac.state !== 'closed') return;
+  // Si está cerrado o no existe, crear (o recrear)
+  ac = new (window.AudioContext || window.webkitAudioContext)();
+  buildAudioGraph();
+}
+
+// Reanudar audio: tolera todos los estados que NO sean 'running'.
+// En Safari iOS, después de cambiar de app, el estado puede ser 'suspended'
+// o 'interrupted' (estado WebKit-only no estándar) — se trata igual.
+// Si el contexto quedó 'closed' (raro pero posible), se recrea.
 function resumeAudio(){
-  if(ac && ac.state === 'suspended'){
+  if(!ac){ initAudio(); return; }
+  if(ac.state === 'closed'){
+    // Recrear desde cero
+    ac = null;
+    initAudio();
+    return;
+  }
+  if(ac.state !== 'running'){
     ac.resume().catch(()=>{});
   }
 }
+
+// Estrategia de recuperación: cuando la pestaña vuelve a ser visible,
+// intentamos resume. Si después de 600ms el contexto sigue sin estar
+// running, recreamos el AudioContext desde cero como red de seguridad.
+function recoverAudioOnVisible(){
+  resumeAudio();
+  setTimeout(()=>{
+    if(ac && ac.state !== 'running' && ac.state !== 'closed'){
+      // Último recurso: cerrar y recrear
+      try{ ac.close(); }catch(e){}
+      ac = null;
+      initAudio();
+    }
+  }, 600);
+}
+
 document.addEventListener('visibilitychange', () => {
-  if(document.visibilityState === 'visible') resumeAudio();
+  if(document.visibilityState === 'visible') recoverAudioOnVisible();
 });
-window.addEventListener('focus', resumeAudio);
-window.addEventListener('pageshow', resumeAudio);
+window.addEventListener('focus',    recoverAudioOnVisible);
+window.addEventListener('pageshow', recoverAudioOnVisible);
+
+// En cada gesto del usuario, intentar resume (iOS suele requerir
+// un gesto válido para reanudar después de una interrupción).
 ['touchstart','mousedown','pointerdown'].forEach(ev=>
-  document.addEventListener(ev, initAudio, {once:false, passive:true, capture:true})
+  document.addEventListener(ev, ()=>{
+    initAudio();
+    resumeAudio();
+  }, {passive:true, capture:true})
 );
 
 function buildBuffers(a){
@@ -1525,7 +1577,7 @@ function cycleInst(t){
     closeKbd();
     initAudio();
     if(ac && bufs){
-      if(ac.state==='suspended') ac.resume();
+      if(ac.state !== 'running') ac.resume().catch(()=>{});
       const s=ac.createBufferSource();
       s.buffer=bufs[trackInst[t]];
       s.connect(ac._master || ac.destination);
@@ -1537,7 +1589,7 @@ function cycleInst(t){
 
 function playPianoNote(midi, dur=0.8){
   if(!ac) return;
-  if(ac.state==='suspended') ac.resume();
+  if(ac.state !== 'running') ac.resume().catch(()=>{});
   const freq = midiToFreq(midi);
   const len  = Math.ceil(ac.sampleRate * dur);
   const buf  = ac.createBuffer(1, len, ac.sampleRate);
@@ -1556,13 +1608,16 @@ function playPianoNote(midi, dur=0.8){
   s.buffer = buf; s.connect(ac._master || ac.destination); s.start(0);
 }
 
-// ── MUTE POR PISTA ──────────────────────────────────────────────
+// ── MUTE / POWER POR PISTA ──────────────────────────────────────
 function syncTrackUI(t){
-  const btn = document.getElementById('tm'+t);
-  const th  = document.getElementById('th'+t);
-  const on  = sndOn[t];
-  if(btn) btn.classList.toggle('off', !on);
-  if(th)  th.classList.toggle('muted', !on);
+  const btnSnd = document.getElementById('tm'+t);
+  const btnLdr = document.getElementById('tp'+t);
+  const th     = document.getElementById('th'+t);
+  if(btnSnd) btnSnd.classList.toggle('off', !sndOn[t]);
+  if(btnLdr) btnLdr.classList.toggle('off', !ldrOn[t]);
+  // La pista se ve "apagada" sólo si AMBOS canales están off
+  // (ningún sonido en la app y ningún disparo físico)
+  if(th) th.classList.toggle('muted', !sndOn[t] && !ldrOn[t]);
 }
 function syncAllTracksUI(){
   for(let t=0;t<TRACKS;t++) syncTrackUI(t);
@@ -1571,12 +1626,24 @@ function tglSnd(t){
   sndOn[t] = !sndOn[t];
   syncTrackUI(t);
 }
+function tglLdr(t){
+  ldrOn[t] = !ldrOn[t];
+  syncTrackUI(t);
+  // Si lo desactivo y había un pad iluminado, lo apago de inmediato
+  if(!ldrOn[t] && active[t]){
+    active[t] = false;
+    inds[t].classList.remove('lit');
+  }
+}
 
 function trigSnd(t){
   if(!shouldSound(t)) return;
   initAudio();
   if(!ac) return;
-  if(ac.state==='suspended'){ ac.resume(); return; }
+  // Si el contexto no está corriendo, intentamos reanudarlo y descartamos
+  // este trigger (el siguiente ya sonará). Vale para 'suspended' e
+  // 'interrupted' (estado WebKit-only).
+  if(ac.state !== 'running'){ ac.resume().catch(()=>{}); return; }
   if(trackInst[t] === 4){
     playPianoNote(trackNote[t], 0.8);
   } else {
