@@ -80,15 +80,33 @@ body{
 }
 .bpm-ctrl{display:flex;align-items:center;gap:8px;flex:1;min-width:0;}
 .bpm-ctrl input[type=range]{
-  -webkit-appearance:none;flex:1;min-width:0;
-  height:3px;background:var(--ink);border-radius:0;outline:none;
+  -webkit-appearance:none;appearance:none;
+  flex:1;min-width:0;
+  /* Área táctil generosa: 32px de alto invisible, sólo se ve la pista de 3px */
+  height:32px;background:transparent;outline:none;
+  margin:0;padding:0;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+/* WebKit / Blink: pista visible */
+.bpm-ctrl input[type=range]::-webkit-slider-runnable-track{
+  height:3px;background:var(--ink);border:none;
 }
 .bpm-ctrl input[type=range]::-webkit-slider-thumb{
-  -webkit-appearance:none;width:14px;height:14px;
+  -webkit-appearance:none;appearance:none;
+  width:24px;height:24px;
   border-radius:50%;background:var(--ink);cursor:pointer;
+  /* Centrar verticalmente sobre la pista de 3px */
+  margin-top:-10px;
+  border:none;
+}
+/* Firefox: pista visible */
+.bpm-ctrl input[type=range]::-moz-range-track{
+  height:3px;background:var(--ink);border:none;
 }
 .bpm-ctrl input[type=range]::-moz-range-thumb{
-  width:14px;height:14px;border:none;border-radius:50%;background:var(--ink);cursor:pointer;
+  width:24px;height:24px;border:none;
+  border-radius:50%;background:var(--ink);cursor:pointer;
 }
 .btn.bpm-adj{
   padding:0;width:26px;height:26px;
