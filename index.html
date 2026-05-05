@@ -314,7 +314,7 @@ body{
 .track-headers{
   display:flex;flex-shrink:0;
   border-bottom:1.5px solid var(--ink);
-  height:72px;background:var(--bg);
+  min-height:72px;background:var(--bg);
 }
 .th-ruler{
   width:36px;flex-shrink:0;
@@ -329,7 +329,6 @@ body{
   padding:7px 4px 6px;gap:3px;
   background:var(--bg);
   transition:opacity .15s;
-  overflow:hidden;
 }
 .th-track:last-child{border-right:none;}
 .th-track.muted{opacity:.4;}
