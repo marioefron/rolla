@@ -8,8 +8,9 @@
 <style>
 :root{
   --bg:        #f5f1ea;
-  --bg-alt:    #ede8de;
+  --bg-alt:    #f1ede4;   /* franja alterna sutil (apenas más oscura que bg-row) */
   --bg-row:    #faf7f0;
+  --bg-dead:   #d8d0bf;   /* zona fuera de la secuencia (claramente más apagada) */
   --ink:       #1a1a1a;
   --ink-soft:  #4a4a4a;
   --muted:     #9a958a;
@@ -251,31 +252,62 @@ body{
 .menu-cal-btn.secondary{background:var(--bg);color:var(--ink);text-align:left;letter-spacing:.14em;}
 
 /* Melodías */
-.melody-save-row{display:flex;align-items:stretch;margin-bottom:10px;border:1.5px solid var(--ink);}
-.melody-name-input{
-  font-family:'Space Mono',monospace;font-size:11px;
-  flex:1;padding:9px 12px;border:none;outline:none;color:var(--ink);
-  background:var(--bg);letter-spacing:.02em;
+/* Barra de estado de edición */
+.seq-status{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 12px;margin-bottom:10px;
+  background:var(--bg-alt);border:1.5px solid var(--ink);
 }
-.melody-name-input:focus{background:#fff;}
-.btn.save-mel{
-  padding:9px 14px;color:var(--bg);
-  font-size:10px;font-weight:700;letter-spacing:.18em;
-  text-transform:uppercase;background:var(--ink);
-  font-family:'Space Mono',monospace;cursor:pointer;
+.seq-status-lbl{
+  flex:1;min-width:0;
+  font-size:11px;font-weight:700;letter-spacing:.03em;color:var(--ink);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.seq-status.unsaved .seq-status-lbl{color:var(--ink-soft);}
+.seq-status-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+  background:var(--ink);
+}
+.seq-status.unsaved .seq-status-dot{
+  background:transparent;border:1.5px solid var(--muted);
+}
+
+/* Botones de guardado */
+.seq-actions{display:flex;gap:8px;margin-bottom:12px;}
+.btn.seq-save,.btn.seq-saveas{
+  flex:1;padding:10px 6px;
+  font-size:10px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;cursor:pointer;
+  font-family:'Space Mono',monospace;
+  border:1.5px solid var(--ink);
   -webkit-appearance:none;appearance:none;
+  text-align:center;
 }
-.btn.save-mel:active{opacity:.85;}
-.melody-list{display:flex;flex-direction:column;max-height:200px;overflow-y:auto;}
+.btn.seq-save{background:var(--ink);color:var(--bg);}
+.btn.seq-save:active{opacity:.85;}
+.btn.seq-saveas{background:var(--bg);color:var(--ink);}
+.btn.seq-saveas:active{background:var(--bg-alt);}
+/* Cuando no hay cambios para guardar sobre la activa, "Guardar" se ve neutro */
+.btn.seq-save.idle{background:var(--bg);color:var(--muted);border-color:var(--line);}
+
+/* Lista de secuencias */
+.melody-list{display:flex;flex-direction:column;max-height:220px;overflow-y:auto;}
 .melody-item{
   display:flex;align-items:center;gap:8px;
   padding:10px 8px;
   border-top:1px dashed var(--line);
+  cursor:pointer;transition:background .1s;
 }
 .melody-item:first-child{border-top:1px solid var(--line);}
 .melody-item:last-child{border-bottom:1px solid var(--line);}
+.melody-item:active{background:var(--bg-alt);}
+.melody-item.active{background:var(--bg-alt);}
+.melody-item.active .mel-idx{background:var(--ink);color:var(--bg);}
 .mel-idx{
-  font-size:14px;font-weight:700;width:22px;color:var(--ink);
+  font-size:11px;font-weight:700;flex-shrink:0;
+  width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink);border:1.5px solid var(--ink);
 }
 .mel-info{flex:1;min-width:0;}
 .melody-item-name{
@@ -283,50 +315,47 @@ body{
   letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .melody-item-meta{
-  display:block;font-size:8px;color:var(--muted);
-  letter-spacing:.12em;margin-top:2px;
+  display:flex;align-items:center;gap:6px;
+  font-size:8px;color:var(--muted);
+  letter-spacing:.1em;margin-top:3px;
 }
+.mel-active-tag{
+  font-size:7px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--bg);background:var(--ink);
+  padding:1px 5px;
+}
+.mel-btns{display:flex;align-items:center;gap:4px;flex-shrink:0;}
 .btn.load-mel{
-  padding:5px 9px;background:var(--ink);color:var(--bg);
-  font-size:9px;font-weight:700;letter-spacing:.16em;
+  padding:6px 10px;background:var(--ink);color:var(--bg);
+  font-size:9px;font-weight:700;letter-spacing:.12em;
   text-transform:uppercase;border:none;
   font-family:'Space Mono',monospace;cursor:pointer;
   -webkit-appearance:none;appearance:none;
 }
-.btn.del-mel{
-  padding:4px 8px;border:none;color:var(--muted);
-  font-size:11px;font-weight:700;background:transparent;
+.btn.rename-mel{
+  padding:5px 7px;border:1.5px solid var(--line);color:var(--ink-soft);
+  font-size:11px;background:var(--bg);
   font-family:'Space Mono',monospace;cursor:pointer;
-  -webkit-appearance:none;appearance:none;
+  -webkit-appearance:none;appearance:none;line-height:1;
 }
-.melody-empty{font-size:10px;color:var(--muted);letter-spacing:.08em;padding:6px 0;}
-
-/* Ayuda */
-.menu-help{display:flex;flex-direction:column;gap:8px;}
-.menu-help p{font-size:10px;color:var(--ink-soft);line-height:1.6;letter-spacing:.02em;}
-.menu-help b{color:var(--ink);}
-
-/* Active seq bar */
-#active-seq-bar{
-  display:none;margin-bottom:8px;padding:6px 9px;
-  background:var(--bg-alt);border:1.5px solid var(--line);
-  align-items:center;gap:6px;
+.btn.del-mel{
+  padding:5px 8px;border:1.5px solid var(--line);color:var(--muted);
+  font-size:11px;font-weight:700;background:var(--bg);
+  font-family:'Space Mono',monospace;cursor:pointer;
+  -webkit-appearance:none;appearance:none;line-height:1;
 }
+.melody-empty{font-size:10px;color:var(--muted);letter-spacing:.08em;padding:10px 0;text-align:center;}
 
 #menu-backdrop{display:none;position:fixed;inset:0;z-index:49;}
 #menu-backdrop.open{display:block;}
 
-/* Footer del menú — AYUDA / ACERCA DE */
-.menu-footer{display:flex;gap:8px;padding:14px 18px;}
-.menu-footer .foot{
-  flex:1;padding:10px 0;text-align:center;
-  font-size:10px;font-weight:700;letter-spacing:.18em;
-  text-transform:uppercase;
-  border:1.5px solid var(--ink);background:var(--bg);color:var(--ink);
-  cursor:pointer;-webkit-appearance:none;appearance:none;
-  font-family:'Space Mono',monospace;
+/* Footer del menú — crédito */
+.menu-footer{display:flex;justify-content:center;padding:16px 18px 18px;}
+.menu-credit{
+  font-size:9px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);
+  text-align:center;
 }
-.menu-footer .foot.muted{border-color:var(--line);color:var(--muted);}
 
 /* ── TRACK HEADERS — Dir C (número + nombre + botón speaker debajo) ── */
 .track-headers{
@@ -491,6 +520,15 @@ body{
   letter-spacing:.14em;text-transform:uppercase;
 }
 .kbd-keys{position:relative;height:100px;display:flex;gap:2px;user-select:none;}
+.kbd-footer{display:flex;justify-content:center;}
+.kbd-next-inst{
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  border:1.5px solid var(--ink);color:var(--ink);
+  padding:8px 16px;background:var(--bg);cursor:pointer;
+  -webkit-appearance:none;appearance:none;width:100%;
+}
+.kbd-next-inst:active{background:var(--ink);color:var(--bg);}
 .kbd-w{
   flex:1;height:100%;background:var(--bg);
   border:1.5px solid var(--ink);border-top:none;cursor:pointer;
@@ -540,6 +578,25 @@ body{
 .btn.confirm-yes{background:var(--ink);color:var(--bg);}
 .btn.confirm-yes:active{opacity:.85;}
 .btn.confirm-no{color:var(--muted);border-color:var(--line);}
+
+/* Name modal (prompt de nombre para guardar) */
+#name-modal{
+  display:none;position:fixed;inset:0;z-index:310;
+  background:rgba(245,241,234,0.92);align-items:center;justify-content:center;
+}
+#name-modal.open{display:flex;}
+#name-modal .confirm-box{gap:16px;}
+.name-modal-input{
+  font-family:'Space Mono',monospace;font-size:13px;
+  width:100%;padding:10px 12px;border:1.5px solid var(--ink);
+  outline:none;color:var(--ink);background:var(--bg);text-align:center;
+  letter-spacing:.04em;
+}
+.name-modal-input:focus{background:#fff;}
+.name-modal-err{
+  font-size:10px;color:#b03a2e;letter-spacing:.03em;text-align:center;
+  min-height:12px;margin-top:-8px;
+}
 
 /* Calibration modal */
 #cal-modal{
@@ -651,30 +708,22 @@ body{
         <span class="menu-title-num">03</span>
         <span class="menu-title">Mis secuencias</span>
       </div>
-      <div id="active-seq-bar">
-        <span style="font-size:9px;color:var(--ink-soft);letter-spacing:.08em;text-transform:uppercase;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="active-seq-name"></span>
-        <button class="btn save-mel" onclick="updateMelody()" style="flex-shrink:0;">Actualizar</button>
+      <!-- Estado de edición actual -->
+      <div class="seq-status" id="seq-status">
+        <span class="seq-status-lbl" id="seq-status-lbl">Nueva secuencia</span>
+        <span class="seq-status-dot" id="seq-status-dot"></span>
       </div>
-      <div class="melody-save-row">
-        <input class="melody-name-input" id="mel-name" type="text" placeholder="nombre_de_archivo" maxlength="30">
-        <button class="btn save-mel" onclick="saveMelody()">Guardar</button>
+      <!-- Acciones de guardado -->
+      <div class="seq-actions">
+        <button class="btn seq-save" id="btn-seq-save" onclick="onSaveClick()">Guardar</button>
+        <button class="btn seq-saveas" id="btn-seq-saveas" onclick="onSaveAsClick()">Guardar como</button>
       </div>
+      <!-- Lista de secuencias -->
       <div class="melody-list" id="mel-list"></div>
     </div>
-    <!-- Footer: AYUDA -->
+    <!-- Footer: crédito -->
     <div class="menu-footer">
-      <button class="foot" onclick="toggleHelp()">Ayuda</button>
-    </div>
-    <div id="menu-help-wrap" style="display:none;padding:0 18px 14px;">
-      <div class="menu-help" id="menu-help">
-        <p><b>Editar</b> — activá el modo edición para agregar o borrar notas tocando sobre las pistas. Deslizá para navegar la secuencia.</p>
-        <p><b>Pistas</b> — tocá el ícono del parlante para silenciar/activar una pista. Tocá el nombre del instrumento para cambiarlo. Piano permite elegir la nota.</p>
-        <p><b>BPM</b> — usá el deslizador o los botones − + para ajustar el tempo.</p>
-        <p><b>Loop</b> — activa la repetición continua de la secuencia.</p>
-        <p><b>Silenciar</b> — silencia o activa todas las pistas a la vez.</p>
-        <p><b>Calibrar</b> — sincroniza los sensores LDR del dispositivo físico con los colores de la pantalla.</p>
-        <p><b>Mis secuencias</b> — guardá y cargá tus ritmos por nombre.</p>
-      </div>
+      <span class="menu-credit">Desarrollado por Mario Efron</span>
     </div>
   </div>
 </div>
@@ -693,17 +742,33 @@ body{
     <button class="kbd-close" onclick="closeKbd()">✕ Cerrar</button>
   </div>
   <div class="kbd-keys" id="kbd-keys"></div>
+  <div class="kbd-footer">
+    <button class="kbd-next-inst" onclick="nextInstFromKbd()">Cambiar instrumento →</button>
+  </div>
 </div>
 
 <!-- Confirm modal -->
 <div id="confirm-modal">
   <div class="confirm-box">
-    <div class="confirm-msg">¿Estás seguro que querés<br>eliminar todo?</div>
+    <div class="confirm-msg" id="confirm-msg">¿Estás seguro?</div>
     <div class="confirm-btns">
-      <button class="btn confirm-no"  onclick="confirmResp(false)">No</button>
-      <button class="btn confirm-yes" onclick="confirmResp(true)">Sí</button>
+      <button class="btn confirm-no"  id="confirm-no-btn"  onclick="confirmResp(false)">No</button>
+      <button class="btn confirm-yes" id="confirm-yes-btn" onclick="confirmResp(true)">Sí</button>
     </div>
   </div>
+</div>
+
+<div id="name-modal">
+  <div class="confirm-box">
+    <div class="confirm-msg" id="name-modal-title">Guardar secuencia</div>
+    <input class="name-modal-input" id="name-modal-input" type="text" placeholder="nombre_de_archivo" maxlength="30" autocomplete="off">
+    <div class="name-modal-err" id="name-modal-err"></div>
+    <div class="confirm-btns">
+      <button class="btn confirm-no"  onclick="nameModalResp(false)">Cancelar</button>
+      <button class="btn confirm-yes" onclick="nameModalResp(true)">Guardar</button>
+    </div>
+  </div>
+</div>
 </div>
 
 <!-- Calibration -->
@@ -873,14 +938,40 @@ function render(){
   const ref = playing ? playhead : scrollBeat;
   const bTop = ref - (wH - rY) / ppb;
   const bBot = ref + rY / ppb;
-  const bS = Math.floor(bTop);
-  const bE = Math.ceil(bBot);
 
+  // ── ZONA DE PISTAS ──────────────────────────────────────────────
+  // La secuencia válida ocupa beats [0, TOTAL]. Fuera de ese rango la
+  // zona se pinta con un color uniforme "dead" (sin franjas ni grilla)
+  // para que se lea claramente como no editable.
+  const yBeat0   = beatY(0);       // borde inferior de la secuencia (en px)
+  const yBeatEnd = beatY(TOTAL);   // borde superior de la secuencia (en px)
+  const seqTopPx = Math.min(yBeat0, yBeatEnd);   // arriba en pantalla
+  const seqBotPx = Math.max(yBeat0, yBeatEnd);   // abajo en pantalla
+
+  // 1) Toda la zona de pistas con color dead
+  const bgDead = getComputedStyle(document.documentElement).getPropertyValue('--bg-dead').trim() || '#e3ddd0';
+  ctx.fillStyle = bgDead;
+  ctx.fillRect(RULER, 0, wW - RULER, wH);
+
+  // 2) La franja válida [0, TOTAL] con el fondo normal de secuencia
+  const validTop = Math.max(0, seqTopPx);
+  const validBot = Math.min(wH, seqBotPx);
+  if(validBot > validTop){
+    ctx.fillStyle = bgRow;
+    ctx.fillRect(RULER, validTop, wW - RULER, validBot - validTop);
+  }
+
+  // 3) Franjas alternas por beat, SOLO dentro de la secuencia
+  const bS = Math.max(0, Math.floor(bTop));
+  const bE = Math.min(TOTAL - 1, Math.ceil(bBot));
   for(let b = bS; b <= bE; b++){
     const y1 = beatY(b);
     const y2 = beatY(b+1);
-    const top = Math.min(y1,y2), bot = Math.max(y1,y2);
-    if(bot < -2 || top > wH+2) continue;
+    let top = Math.min(y1,y2), bot = Math.max(y1,y2);
+    // Recortar al rango válido y al viewport
+    top = Math.max(top, seqTopPx);
+    bot = Math.min(bot, seqBotPx);
+    if(bot < -2 || top > wH+2 || bot <= top) continue;
     const isAlt = ((b % 2) + 2) % 2 === 1;
     ctx.fillStyle = isAlt ? bgAlt : bgRow;
     ctx.fillRect(RULER, top, wW - RULER, bot - top);
@@ -899,7 +990,8 @@ function render(){
   const bEsub = Math.ceil(bBot  * SUB) / SUB;
 
   for(let b = bSsub; b <= bEsub; b += SNAP){
-    if(b < -SNAP || b > TOTAL + SNAP) continue;
+    // Solo dibujar grilla DENTRO de la secuencia (la zona dead va lisa)
+    if(b < 0 || b > TOTAL) continue;
     const y = beatY(b);
     if(y < -2 || y > wH + 2) continue;
 
@@ -907,7 +999,7 @@ function render(){
     const perBar  = BPB * SUB;
     const perBeat = SUB;
 
-    const isBar  = b >= 0 && bInt % perBar  === 0;
+    const isBar  = bInt % perBar  === 0;
     const isBeat = !isBar  && bInt % perBeat === 0;
     const isSub  = !isBar  && !isBeat;
 
@@ -927,13 +1019,13 @@ function render(){
       ctx.beginPath(); ctx.moveTo(RULER, y); ctx.lineTo(wW, y); ctx.stroke();
     }
 
-    if(isBar && b >= 0 && b <= TOTAL){
+    if(isBar && b <= TOTAL){
       const bar = Math.round(b / BPB);
       ctx.fillStyle   = ink;
       ctx.font        = 'bold 12px Space Mono,monospace';
       ctx.textAlign   = 'left';
       ctx.fillText(String(bar + 1), 6, y + 14);
-    } else if(isBeat && b >= 0 && b <= TOTAL){
+    } else if(isBeat){
       ctx.fillStyle = muted;
       ctx.font      = 'bold 14px Space Mono,monospace';
       ctx.textAlign = 'center';
@@ -941,18 +1033,17 @@ function render(){
     }
   }
 
-  const ey=beatY(TOTAL);
-  if(ey>-2&&ey<wH+2){
-    ctx.strokeStyle=muted; ctx.lineWidth=1; ctx.setLineDash([4,3]);
-    ctx.beginPath(); ctx.moveTo(RULER,ey); ctx.lineTo(wW,ey); ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle=muted; ctx.font='7px Space Mono,monospace';
-    ctx.textAlign='left'; ctx.fillText('FIN',RULER+3,ey-3);
+  // Bordes de la secuencia: líneas sólidas que separan la zona editable
+  // de la zona dead (refuerzan el cambio de color).
+  ctx.strokeStyle = ink; ctx.lineWidth = 1.2;
+  if(yBeatEnd > -2 && yBeatEnd < wH+2){
+    ctx.beginPath(); ctx.moveTo(RULER, yBeatEnd); ctx.lineTo(wW, yBeatEnd); ctx.stroke();
+  }
+  if(yBeat0 > -2 && yBeat0 < wH+2){
+    ctx.beginPath(); ctx.moveTo(RULER, yBeat0); ctx.lineTo(wW, yBeat0); ctx.stroke();
   }
 
   if(editMode){
-    ctx.fillStyle='rgba(0,0,0,0.04)';
-    ctx.fillRect(RULER,0,wW-RULER,wH);
     ctx.strokeStyle=inkSoft; ctx.lineWidth=1; ctx.setLineDash([4,4]);
     ctx.beginPath(); ctx.moveTo(RULER,rY); ctx.lineTo(wW,rY); ctx.stroke();
     ctx.setLineDash([]);
@@ -1083,12 +1174,62 @@ bLp.addEventListener('click',()=>{
   bLp.classList.toggle('on',looping); bLp.classList.toggle('off',!looping);
 });
 bClrAll.addEventListener('click',()=>{
-  document.getElementById('confirm-modal').classList.add('open');
+  confirmAsk('¿Estás seguro que querés<br>eliminar todo?', yes=>{
+    if(yes){
+      notes=[[],[],[],[]];
+      render(); saveSession();
+    }
+  });
 });
 
+// ── MODAL DE CONFIRMACIÓN GENÉRICO ──────────────────────────────
+let _confirmCb = null;
+function confirmAsk(msgHtml, cb){
+  _confirmCb = cb;
+  document.getElementById('confirm-msg').innerHTML = msgHtml;
+  document.getElementById('confirm-modal').classList.add('open');
+}
 function confirmResp(yes){
   document.getElementById('confirm-modal').classList.remove('open');
-  if(yes){ notes=[[],[],[],[]]; render(); saveSession(); }
+  const cb = _confirmCb; _confirmCb = null;
+  if(cb) cb(yes);
+}
+
+// ── MODAL DE NOMBRE (prompt) ────────────────────────────────────
+let _nameCb = null;
+function openNameModal(title, initial, cb){
+  _nameCb = cb;
+  document.getElementById('name-modal-title').textContent = title;
+  const input = document.getElementById('name-modal-input');
+  input.value = initial || '';
+  document.getElementById('name-modal-err').textContent = '';
+  document.getElementById('name-modal').classList.add('open');
+  setTimeout(()=>{ input.focus(); input.select(); }, 50);
+}
+function nameModalResp(ok){
+  const input = document.getElementById('name-modal-input');
+  const err   = document.getElementById('name-modal-err');
+  if(!ok){
+    document.getElementById('name-modal').classList.remove('open');
+    _nameCb = null;
+    return;
+  }
+  const name = input.value.trim();
+  if(!name){
+    err.textContent = 'Escribí un nombre';
+    input.focus();
+    return;
+  }
+  // Chequeo de nombre duplicado
+  const existing = getMelodies().findIndex(m => m.name.toLowerCase() === name.toLowerCase());
+  if(existing >= 0 && existing !== activeSeqIdx){
+    err.textContent = 'Ya existe una secuencia con ese nombre';
+    input.focus(); input.select();
+    return;
+  }
+  document.getElementById('name-modal').classList.remove('open');
+  const cb = _nameCb; _nameCb = null;
+  if(cb) cb(name);
 }
 editBtn.addEventListener('click',()=>{
   editMode=!editMode;
@@ -1155,64 +1296,120 @@ document.getElementById('sub-ter').addEventListener('click',()=>{
 
 // ── MELODÍAS ─────────────────────────────────────────────────────
 const MEL_KEY = 'rola_melodies';
-let activeSeqIdx = -1;
+let activeSeqIdx  = -1;     // índice de la secuencia activa en la lista (-1 = nueva sin guardar)
+let activeSeqName = '';     // nombre de la secuencia activa
+let seqDirty      = true;   // hay cambios sin guardar respecto a la versión almacenada
 
-function setActiveSeq(idx, name){
-  activeSeqIdx = idx;
-  const bar = document.getElementById('active-seq-bar');
-  if(idx >= 0){
-    document.getElementById('active-seq-name').textContent = '↺ ' + name;
-    bar.style.display = 'flex';
-  } else {
-    bar.style.display = 'none';
-  }
+// Marca que el estado actual difiere de lo guardado. Se llama desde
+// saveSession() (que ya se dispara ante cualquier edición).
+function markDirty(){
+  seqDirty = true;
+  refreshSeqStatus();
 }
 
-function updateMelody(){
-  if(activeSeqIdx < 0) return;
-  const list = getMelodies();
-  if(!list[activeSeqIdx]) return;
-  const now  = new Date();
-  const fecha = now.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit'})
-              + ' ' + now.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
-  list[activeSeqIdx] = {
-    ...list[activeSeqIdx],
-    fecha,
-    notes: JSON.parse(JSON.stringify(notes)),
-    bars: BARS, bpb: BPB, sub: SUB, bpm,
-    trackInst: [...trackInst],
-    trackNote: [...trackNote]
-  };
-  saveMelodies(list);
-  renderMelodyList();
-}
 function getMelodies(){
   try{ return JSON.parse(localStorage.getItem(MEL_KEY)) || []; }
   catch(e){ return []; }
 }
 function saveMelodies(list){ localStorage.setItem(MEL_KEY, JSON.stringify(list)); }
 
-function saveMelody(){
-  const input = document.getElementById('mel-name');
-  const name  = input.value.trim();
-  if(!name) { input.focus(); return; }
-  const list = getMelodies();
-  const now  = new Date();
-  const fecha = now.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit'})
-              + ' ' + now.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
-  list.unshift({
-    name, fecha,
+function nowStamp(){
+  const n = new Date();
+  return n.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit'})
+       + ' ' + n.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+}
+
+// Snapshot del estado actual de la app como objeto secuencia
+function currentSeqData(){
+  return {
     notes: JSON.parse(JSON.stringify(notes)),
     bars: BARS, bpb: BPB, sub: SUB, bpm,
     trackInst: [...trackInst], trackNote: [...trackNote]
-  });
+  };
+}
+
+// ── Estado de edición (barra superior + botón Guardar) ──────────
+function refreshSeqStatus(){
+  const lbl  = document.getElementById('seq-status-lbl');
+  const box  = document.getElementById('seq-status');
+  const save = document.getElementById('btn-seq-save');
+  if(!lbl || !box || !save) return;
+  if(activeSeqIdx >= 0){
+    lbl.textContent = 'Editando: ' + activeSeqName;
+    box.classList.remove('unsaved');
+    // Si no hay cambios sin guardar, el botón Guardar se ve neutro
+    save.classList.toggle('idle', !seqDirty);
+    save.textContent = 'Guardar';
+  } else {
+    lbl.textContent = 'Nueva secuencia';
+    box.classList.add('unsaved');
+    save.classList.remove('idle');
+    save.textContent = 'Guardar';
+  }
+}
+
+function setActiveSeq(idx, name){
+  activeSeqIdx  = idx;
+  activeSeqName = name || '';
+  refreshSeqStatus();
+}
+
+// ── Acción del botón "Guardar" (contextual) ─────────────────────
+// Si hay secuencia activa → actualiza esa.
+// Si es nueva (sin guardar) → pide nombre y crea.
+function onSaveClick(){
+  if(activeSeqIdx >= 0){
+    const list = getMelodies();
+    if(list[activeSeqIdx]){
+      list[activeSeqIdx] = {
+        ...list[activeSeqIdx],
+        ...currentSeqData(),
+        fecha: nowStamp()
+      };
+      saveMelodies(list);
+      seqDirty = false;
+      refreshSeqStatus();
+      renderMelodyList();
+      return;
+    }
+    // Si por algún motivo el índice ya no existe, caemos a crear
+    setActiveSeq(-1, '');
+  }
+  openNameModal('Guardar secuencia', '', name => createSeq(name));
+}
+
+// ── Acción del botón "Guardar como" (siempre crea copia) ────────
+function onSaveAsClick(){
+  const suggested = activeSeqIdx >= 0 ? activeSeqName + ' copia' : '';
+  openNameModal('Guardar como copia', suggested, name => createSeq(name));
+}
+
+// Crea una secuencia nueva con el nombre dado y la deja como activa
+function createSeq(name){
+  const list = getMelodies();
+  list.unshift({ name, fecha: nowStamp(), ...currentSeqData() });
   saveMelodies(list);
-  input.value = '';
-  setActiveSeq(-1, '');
+  // La nueva queda en index 0 y pasa a ser la activa
+  setActiveSeq(0, name);
+  seqDirty = false;
+  refreshSeqStatus();
   renderMelodyList();
 }
 
+// ── Cargar (con protección de cambios sin guardar) ──────────────
 function loadMelody(idx){
+  if(seqDirty && hasAnyNotes()){
+    confirmAsk('Tenés cambios sin guardar.<br>¿Cargar otra secuencia igual?', yes=>{
+      if(yes) doLoadMelody(idx);
+    });
+  } else {
+    doLoadMelody(idx);
+  }
+}
+function hasAnyNotes(){
+  return notes.some(track => track.length > 0);
+}
+function doLoadMelody(idx){
   const list = getMelodies();
   const mel  = list[idx];
   if(!mel) return;
@@ -1222,9 +1419,7 @@ function loadMelody(idx){
   bpm    = mel.bpm;
   if(mel.trackInst) trackInst = [...mel.trackInst];
   if(mel.trackNote) trackNote = [...mel.trackNote];
-  [0,1,2,3].forEach(t => {
-    setTrackLabel(t);
-  });
+  [0,1,2,3].forEach(t => setTrackLabel(t));
   document.getElementById('bars-v').textContent = BARS;
   document.getElementById('bpc-v').textContent  = BPB;
   document.getElementById('bpm-s').value        = bpm;
@@ -1235,42 +1430,66 @@ function loadMelody(idx){
   pausePlay();
   closeMenu();
   setActiveSeq(idx, mel.name);
+  seqDirty = false;
+  refreshSeqStatus();
+  saveSession({keepClean:true});
   render();
 }
 
+// ── Renombrar ───────────────────────────────────────────────────
+function renameMelody(idx){
+  const list = getMelodies();
+  if(!list[idx]) return;
+  openNameModal('Renombrar secuencia', list[idx].name, name=>{
+    const l = getMelodies();
+    if(!l[idx]) return;
+    l[idx].name = name;
+    saveMelodies(l);
+    if(activeSeqIdx === idx){ activeSeqName = name; refreshSeqStatus(); }
+    renderMelodyList();
+  });
+}
+
+// ── Borrar (con confirmación) ───────────────────────────────────
 function deleteMelody(idx){
   const list = getMelodies();
-  list.splice(idx, 1);
-  saveMelodies(list);
-  if(activeSeqIdx === idx) setActiveSeq(-1, '');
-  else if(activeSeqIdx > idx) setActiveSeq(activeSeqIdx - 1,
-    document.getElementById('active-seq-name').textContent.replace('↺ ',''));
-  renderMelodyList();
+  if(!list[idx]) return;
+  confirmAsk('¿Eliminar "' + list[idx].name + '"?', yes=>{
+    if(!yes) return;
+    const l = getMelodies();
+    l.splice(idx, 1);
+    saveMelodies(l);
+    // Reajustar el índice activo
+    if(activeSeqIdx === idx){ setActiveSeq(-1, ''); seqDirty = true; }
+    else if(activeSeqIdx > idx){ activeSeqIdx--; }
+    refreshSeqStatus();
+    renderMelodyList();
+  });
 }
 
 function renderMelodyList(){
   const list = getMelodies();
   const el   = document.getElementById('mel-list');
   if(list.length === 0){
-    el.innerHTML = '<span class="melody-empty">Sin secuencias guardadas</span>';
+    el.innerHTML = '<span class="melody-empty">Todavía no guardaste ninguna secuencia</span>';
     return;
   }
   el.innerHTML = list.map((m,i) => `
-    <div class="melody-item">
+    <div class="melody-item${i===activeSeqIdx?' active':''}" onclick="loadMelody(${i})">
       <span class="mel-idx">${String(i+1).padStart(2,'0')}</span>
       <div class="mel-info">
         <span class="melody-item-name" title="${m.name}">${m.name}</span>
-        <span class="melody-item-meta">${m.fecha}</span>
+        <span class="melody-item-meta">
+          ${i===activeSeqIdx?'<span class="mel-active-tag">activa</span>':''}
+          <span>${m.fecha}</span>
+        </span>
       </div>
-      <button class="btn load-mel" onclick="loadMelody(${i})">Cargar</button>
-      <button class="btn del-mel" onclick="deleteMelody(${i})">✕</button>
+      <div class="mel-btns">
+        <button class="btn rename-mel" onclick="event.stopPropagation();renameMelody(${i})" aria-label="Renombrar">✎</button>
+        <button class="btn del-mel" onclick="event.stopPropagation();deleteMelody(${i})" aria-label="Eliminar">✕</button>
+      </div>
     </div>
   `).join('');
-}
-
-function toggleHelp(){
-  const el = document.getElementById('menu-help-wrap');
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 
 // ── HAMBURGER MENU ───────────────────────────────────────────────
@@ -1583,6 +1802,17 @@ function openKbd(t){
 function closeKbd(){ document.getElementById('kbd-modal').classList.remove('open'); }
 
 function cycleInst(t){
+  // Si la pista YA está en Piano, un tap reabre el teclado para cambiar
+  // la nota (en vez de ciclar y obligar a dar la vuelta completa).
+  if(INST_NAMES[trackInst[t]] === 'Piano'){
+    openKbd(t);
+    return;
+  }
+  advanceInst(t);
+}
+
+// Avanza al siguiente instrumento de la pista y actualiza todo
+function advanceInst(t){
   trackInst[t] = (trackInst[t] + 1) % INST_NAMES.length;
   const inst   = INST_NAMES[trackInst[t]];
   setTrackLabel(t);
@@ -1602,6 +1832,12 @@ function cycleInst(t){
     }
   }
   saveSession();
+}
+
+// Botón "Cambiar instrumento →" dentro del teclado: sale de Piano
+// avanzando al siguiente instrumento de la lista.
+function nextInstFromKbd(){
+  advanceInst(kbdTrack);
 }
 
 function playPianoNote(midi, dur=0.8){
@@ -1675,13 +1911,16 @@ function trigSnd(t){
 // ── INIT ─────────────────────────────────────────────────────────
 const SESSION_KEY = 'rolla_session';
 
-function saveSession(){
+function saveSession(opts){
   try{
     localStorage.setItem(SESSION_KEY, JSON.stringify({
       notes, BARS, BPB, SUB, bpm,
       trackInst: [...trackInst], trackNote: [...trackNote]
     }));
   } catch(e){}
+  // Toda edición que persiste sesión marca la secuencia como modificada,
+  // salvo cuando venimos de cargar/crear (opts.keepClean).
+  if(!(opts && opts.keepClean)) markDirty();
 }
 
 function restoreSession(){
@@ -1713,6 +1952,7 @@ function restoreSession(){
 window.addEventListener('resize', resize);
 restoreSession();
 syncAllTracksUI();
+refreshSeqStatus();
 resize();
 </script>
 </body>
