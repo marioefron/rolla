@@ -219,10 +219,11 @@ body{
   -webkit-appearance:none;appearance:none;
 }
 .btn.msub{
-  padding:8px 14px;border:1.5px solid var(--ink);color:var(--ink);
-  font-size:11px;font-weight:700;letter-spacing:.14em;
+  padding:8px 8px;border:1.5px solid var(--ink);color:var(--ink);
+  font-size:11px;font-weight:700;letter-spacing:.06em;
   text-transform:uppercase;background:var(--bg);
   font-family:'Space Mono',monospace;cursor:pointer;flex:1;
+  white-space:nowrap;
   -webkit-appearance:none;appearance:none;
 }
 .btn.msub.on{background:var(--ink);color:var(--bg);}
@@ -352,11 +353,11 @@ body{
 /* Footer del menú — crédito */
 .menu-footer{display:flex;justify-content:center;padding:16px 18px 18px;}
 .menu-credit{
-  font-size:10px;font-weight:700;letter-spacing:.1em;line-height:1.6;
+  font-size:10px;font-weight:400;letter-spacing:.1em;line-height:1.6;
   text-transform:uppercase;color:var(--muted);
   text-align:center;
 }
-.menu-credit-handle{text-transform:none;}
+.menu-credit-handle{text-transform:none;font-weight:700;}
 
 /* ── TRACK HEADERS — Dir C (número + nombre + botón speaker debajo) ── */
 .track-headers{
@@ -724,7 +725,7 @@ body{
     </div>
     <!-- Footer: crédito -->
     <div class="menu-footer">
-      <span class="menu-credit">Esta app fue creada para utilizar en el dispositivo Rolla desarrollado por Mario Efron – <span class="menu-credit-handle">@marioefron</span></span>
+      <span class="menu-credit">Esta app fue creada para utilizar en el dispositivo Rolla desarrollado por Mario Efron <span class="menu-credit-handle">@marioefron</span></span>
     </div>
   </div>
 </div>
