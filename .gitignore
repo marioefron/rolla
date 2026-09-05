@@ -1,0 +1,7 @@
+.DS_Store
+.claude/
+
+# Raw/original media before optimizing into assets/ — not meant for deploy.
+Como_funciona.png
+Rolla_2_V3.MP4
+Rolla_Loop.mov

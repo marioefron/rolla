@@ -27,8 +27,13 @@ jobs:
       - name: Prepare site
         run: |
           mkdir -p _site
-          cp index.html _site/
-          cp CNAME _site/
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.claude' \
+            --exclude='_site' \
+            --exclude='.DS_Store' \
+            ./ _site/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
